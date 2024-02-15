@@ -1,0 +1,93 @@
+{% extends "bases/base.html" %}
+{% load static %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static  "css/pedidos.css" %}">
+
+    
+    <!-- Select2 CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!-- Select2 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+{% endblock 'head' %}
+
+{% block 'conteudo' %}
+
+<header>
+
+    <div class="sidebar"> 
+        <a class="sidebar-linha" href="{% url 'gerenciar_vendas' %}">Ultimas Vendas</a>     
+        <a class="sidebar-linha" href="{% url 'pedidos' %}">Novo Pedido</a>        
+        <a class="sidebar-linha" href="{% url 'pedidos_abertos' %}">Pedidos em Aberto</a>
+        <a class="sidebar-pagina">Editar Venda</a>                      
+    </div>
+
+    <div class="centralizar-form">
+    <form class="form-pedido" action="{% url 'editar_venda' venda.id %}" method="POST"> {% csrf_token %}
+        <h1 class="mb-4" style="font-size: 25px">Editar Venda</h1>           
+        <label>Cliente</label>
+        <select class="form-control select2 mb-4" name="cliente">
+            {% for cliente in clientes %}
+                <option class="opt" value="{{ cliente }}" {% if cliente == venda.cliente %}selected{% endif %}>{{cliente.nome}}</option>
+            {% endfor %}
+        </select>
+
+        <script>
+            // Inicialize o plugin Select2
+            $(document).ready(function() {
+              $('.select2').select2();
+            });
+        </script>
+
+        <div class="form-group row">
+            <div class="form-group col-md-6 mt-4">
+                <label>Selecione os produtos</label>                 
+                <select class="select form-control bg-select mb-4" multiple name="produtos">
+                    {% for produto in produtos %}                                                                                                               
+                        <option value="{{produto.id}}" {% if produto.nome in produtos_selecionados  %}selected{% endif %}>{{produto}}</option>                          
+                    {% endfor %}                                                                   
+                </select>
+            </div>
+            <div class="form-group col-md-3 mt-4">
+                <label>Valor Uni</label>                                                                                        
+                {% for valor in valor_unitario_produtos %}
+                    <input class="form-control form-control-sm" value="{{valor}}" name="valor_unitario">
+                {% endfor %}                                                                  
+            </div>
+            <div class="form-group col-md-3 mt-4 ">                        
+                <label>Qtde</label>
+                {% for quantidade in quantidade_preencher %}
+                    <input class="form-control form-control-sm" type="number" name="quantidade_produto" value={{quantidade}}>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="row  ml-1">
+            <div class="col form-check d-flex mb-4">
+                {% if venda.nfe == True and venda.boleto == False %}
+                    <input class="form-check-input me-2" checked type="checkbox" name="nfe_vista">
+                {% else %}
+                    <input class="form-check-input me-2" type="checkbox" name="nfe_vista">
+                {% endif %}
+                <label class="form-check-label">Nota Fiscal à Vista</label>
+            </div>            
+            <div class="col form-check d-flex mb-4">
+                {% if venda.nfe == True and venda.boleto == True %}
+                    <input class="form-check-input me-2" checked type="checkbox" name="nfe_prazo">
+                {% else %}
+                <input class="form-check-input me-2" type="checkbox" name="nfe_prazo">
+                {% endif %}
+                <label class="form-check-label">Nota Fiscal com Boleto</label>
+            </div>
+        </div>        
+        <input type="submit" class="btn-pedido" value="Editar Venda">                
+    </form>
+    </div>
+    
+</header>
+
+{% endblock 'conteudo' %}

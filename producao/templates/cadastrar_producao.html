@@ -1,0 +1,155 @@
+{% extends "bases/base.html" %}
+{% load static %}
+
+{% block 'head' %} 
+    <link rel="stylesheet" href="{% static  "css/cadastrar_producao.css" %}">
+    
+{% endblock 'head' %}
+
+{% block 'conteudo' %}
+
+
+
+<header>
+    
+    <div class="sidebar">
+        <a class="sidebar-linha" href="{% url 'producao' %}">Estoque</a>
+        <span class="sidebar-pagina">Registrar Produção</span>        
+        <a class="sidebar-linha" href="{% url 'historico_producao' %}">Histórico Produção</a>
+    </div>
+
+      
+    <div class="container">
+
+        {% if messages %} 
+            {% for message in messages %}
+                <div class= "alert {{ message.tags }}" style="margin-top: 10px">{{ message }}</div>
+            {% endfor %}        
+        {% endif %}
+
+                
+        <div class="centralizar-form">
+            <form class="form-geral" action="{% url 'cadastrar_producao' %}" method="POST"> {% csrf_token %}
+
+                <div class="row" style="margin-left: 1px; margin-top: 10px">
+                    <h1>Registrar Produção</h1>
+                    <div class="col-4">
+                        <label>Data</label>
+                        <input type="date" class="form-control" name="data" value="teste">
+                    </div>                 
+                </div>
+
+                <div class="form-producao">
+                    <div class="form-produtos" id="formulario1">
+                        <div class="row mb-2">
+                            <div class="col">
+                                <label>Funcionario</label>
+                                <input type="text" class="form-control" value="Funcionario 1" name="funcionario1">
+                            </div>             
+                        </div>
+
+                        <div class="form-group row mb-2">
+                            <div class="form-group col-8 ">
+                                <label>Produto</label>
+                                <select multiple class="form-control bg-select" multiple name="produtos1">
+                                    {% for produto in produtos%}
+                                        <option value="{{produto.id}}">{{produto}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group col-4 mb-2">                        
+                                <label>Qtde</label>
+                                <input class="form-control form-control-sm" type="number" name="quantidade1">
+                                <input class="form-control form-control-sm" type="number" name="quantidade1">
+                                <input class="form-control form-control-sm" type="number" name="quantidade1">
+                                <input class="form-control form-control-sm" type="number" name="quantidade1">
+                            </div>                 
+
+                        </div>
+                    </div>
+
+                    <div class="form-produtos" id="formulario2">
+                        <div class="form-group row mb-2">
+                            <div class="col">
+                                <label>Funcionario</label>
+                                <input type="text" class="form-control" value="Funcionario 2" name="funcionario2">
+                            </div>             
+                        </div>
+
+                        <div class="form-group row mb-2">
+                            <div class="form-group col-8">
+                                <label>Produto</label>
+                                <select multiple class="form-control bg-select" multiple name="produtos2">
+                                    {% for produto in produtos%}
+                                        <option value="{{produto.id}}">{{produto}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group col-4 mb-2">                        
+                                <label>Qtde</label>
+                                <input class="form-control form-control-sm" type="number" name="quantidade2">
+                                <input class="form-control form-control-sm" type="number" name="quantidade2">
+                                <input class="form-control form-control-sm" type="number" name="quantidade2">
+                                <input class="form-control form-control-sm" type="number" name="quantidade2">
+                            </div>             
+
+                        </div>
+                    </div>
+
+                    <div class="form-produtos" id="btn_abrir">
+                        <button type="button" onclick="mostrarFormulario3()"><i class="fa-solid fa-plus"></i> Funcionário</button>
+                    </div>
+
+                    <div class="form-produtos" id="formulario3">
+                        <div class="form-group row mb-2">
+                            <div class="col">
+                                <label>Funcionario</label>
+                                <input type="text" class="form-control" value="Funcionario 3" name="funcionario3">
+                            </div>             
+                        </div>
+
+                        <div class="form-group row mb-2">
+                            <div class="form-group col-8">
+                                <label>Produto</label>
+                                <select multiple class="form-control bg-select" multiple name="produtos3">
+                                    {% for produto in produtos%}
+                                        <option value="{{produto.id}}">{{produto}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group col-4 mb-2">                        
+                                <label>Qtde</label>
+                                <input class="form-control form-control-sm" type="number" name="quantidade3">
+                                <input class="form-control form-control-sm" type="number" name="quantidade3">
+                                <input class="form-control form-control-sm" type="number" name="quantidade3">
+                                <input class="form-control form-control-sm" type="number" name="quantidade3">
+                            </div>             
+
+                        </div>
+                    </div>
+                </div>
+                
+                <input type="submit" class="btn-registrar" value="Registrar Produção">
+                </div>
+            </form>
+        </div>
+    </div>
+
+</header>
+
+<script>
+    function mostrarFormulario3() {
+      // Exibe o segundo formulário
+      document.getElementById('formulario3').style.display = 'block';
+      document.getElementById('btn_abrir').style.display = 'none';
+    }
+</script>
+
+
+
+
+
+{% endblock %}

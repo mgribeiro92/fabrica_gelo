@@ -1,0 +1,54 @@
+{% extends "bases/base.html" %}
+{% load static %}
+
+{% block 'head' %} 
+    <link rel="stylesheet" href="{% static  "css/producao.css" %}">
+{% endblock 'head' %}
+
+{% block 'conteudo' %}
+
+
+{% if messages %}      
+  {% for message in messages %}             
+    <div class="alert {{message.tags}}">                 
+      {{message}}             
+    </div>         
+  {% endfor %} 
+{% endif %}
+
+<header>
+    
+    <div class="sidebar">
+        <span class="sidebar-pagina">Estoque</span>
+        <a class="sidebar-linha" href="{% url 'cadastrar_producao' %}">Registrar Produção</a>
+        <a class="sidebar-linha" href="{% url 'historico_producao' %}">Histórico Produção</a>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h1>Estoque Gelo</h1>
+            <div class="row">
+            {% for produto in produtos %}
+                <div class="col">                                        
+                    <div class="card-title">{{produto}}</div>                
+                    <div class="card-text">Estoque: {{produto.estoque}} pacotes</div>
+                </div>
+            {% endfor %}
+        </div>            
+        </div>
+
+        <div class="card">
+            <h1>Estoque Embalagem</h1>
+            <div class="row">
+                {% for embalagem in embalagens %}            
+                    <div class="col">                                    
+                        <div class="card-title">{{embalagem}}</div>                
+                        <div class="card-text">Estoque: {{embalagem.estoque}} unidades</div>                         
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</header>
+
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends "bases/base.html" %}
+{% load static %}
+
+{% block 'head' %} 
+    <link rel="stylesheet" href="{% static  "css/historico_despesa.css" %}">
+
+    <script>
+        function enviarDados(idDespesa) {
+            var dados = {
+                despesa: idDespesa,                              
+            };
+        
+            fetch('editar_despesa', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}' // Adicione isso se estiver usando proteção CSRF
+                },
+                body: JSON.stringify(dados)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Faça algo com a resposta, se necessário
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+            });
+        }       
+    </script>
+{% endblock 'head' %}
+
+{% block 'conteudo' %}
+
+
+
+<header>
+
+    <div class="sidebar">
+        <span class="sidebar-pagina">Hitórico Despesa</span>
+        <a class="sidebar-linha" href="{% url 'registro_despesa' %}">Registro Despesa</a>
+    </div>
+    
+     
+    <div class="container">
+        <div class="container-fluid">
+            {% if messages %} 
+                {% for message in messages %}
+                    <div class= "alert {{ message.tags }}" style="margin-top: 10px" >{{ message }} </div>
+                {% endfor %}        
+            {% endif %}
+        </div> 
+
+        <div class="linha_filtro">
+            <form class="formulario_filtro" action="{% url "historico_despesa" %}" method="GET">             
+                <div class="coluna_input">                
+                    <h1>Caixa</h1>                
+                    <select name="caixa" class="form-select">
+                        {% for caixa in caixas %}
+                            <option>{{caixa}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="coluna_filtro">         
+                    <input type="submit" class="btn_filtro" value="Filtrar">                
+                </div>
+                <div class="coluna_filtro">
+                    <input type="hidden" name="limpar">        
+                    <input type="submit" style="background-color: gray" class="btn_filtro" name="limpar" value="Limpar">                
+                </div>
+            </form>
+
+        </div>
+                  
+        <div class="tabela-despesa">
+            <h1>Historico Despesas</h1>
+            <table style="width:100%">
+                <thead>
+                    <tr>
+                        <th style="width: 210px">Data</th>
+                        <th>Categoria</th>
+                        <th>Subcategoria</th>
+                        <th>Tipo</th>
+                        <th>Caixa</th>
+                        <th>Valor</th>
+                        <th>Observação</th>
+                        <th>Editar</th>
+                    </tr>
+                </thead>
+
+                {% for despesa in despesas %}
+                <tbody>
+                    <tr>                         
+                        <td>{{ despesa.data }}</td>
+                        <td>{{ despesa.categoria }}</td>
+                        <td>{{ despesa.subcategoria }}</td>
+                        <td>{{ despesa.tipo_pagamento }} </td> 
+                        <td>{{ despesa.caixa }}</td>
+                        <td>R$ {{ despesa.valor}} </td>
+                        <td>{{ despesa.obs }} </td>
+                        <td>
+                            <a class="btn-despesa" href="{% url 'editar_despesa' despesa.id %}">Editar<a>
+                        </td> 
+                </tbody>
+                {% endfor %} 
+            </table>
+        </div>
+   </div>
+</header>
+
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends "bases/base.html" %}
+{% load static %}
+
+{% block 'head' %} 
+    <link rel="stylesheet" href="{% static  "css/vendas.css" %}">
+{% endblock 'head' %}
+
+{% block 'conteudo' %}
+
+
+<header  class="header">
+
+    <div>
+        <div class="msg-venda">
+            {% if messages %} 
+                {% for message in messages %}
+                    <div class= "alert {{ message.tags }}" >{{ message }} </div>
+                {% endfor %}        
+            {% endif %}
+        </div>
+
+        <div class="resumo_pedido">
+            <div class="cabecalho">
+                <h1>Resumo da Venda</h1>                      
+                <div class="row">
+                    <div class="col">
+                        <span class="font-bold">Data:</span> {{ultima_venda.data}}
+                    </div>
+                    <div class="col">
+                        <span class="font-bold">Pedido:</span> {{ultima_venda}}
+                    </div>
+                    <div class="col">
+                        <span class="font-bold">Cliente:</span> {{ultima_venda.cliente}}
+                    </div>
+                    <div class="col">
+                        <span class="font-bold">Status:</span> {{ultima_venda.badge_template_pagamento}}
+                    </div>             
+                </div>
+            </div>
+
+            <div class="produto_titulo">
+                <div class="linha">
+                    <div class="coluna">Produto</div>
+                    <div class="coluna">Quantidade</div>
+                    <div class="coluna">Valor Unitario</div>
+                    <div class="coluna">Valor Produto</div>
+                </div>
+            </div>
+
+            
+            {% for pedidos in ultimo_pedido %}                    
+                {% for produto in pedidos.produto.all %}
+                <div class="linha">              
+                    <div class="coluna">{{produto.produto}}</div>
+                    <div class="coluna">{{produto.quantidade}}</div>
+                    <div class="coluna">{{produto.valor_unitario}}</div>
+                    <div class="coluna">{{produto.valor_pedido}}</div>
+                </div>
+                {% endfor %}                 
+            {% endfor %} 
+                        
+            <div class="col" style="margin: 20px 10px"><span class="font-bold">Valor Total Pedido: </span>R$ {{ultima_venda.valor_total}}</div>
+                
+            <div class="row mb-3">
+                <div class="col">
+                    <a class="btn btn-outline-primary btn-resumo" href="{% url 'pedidos' %}">Novo Pedido</a>
+                    <a class="btn btn-outline-primary btn-resumo" href="{% url 'gerenciar_vendas' %}">Ultimos Pedidos</a>
+                    <a class="btn btn-outline-primary btn-resumo" href="{% url 'editar_venda' ultima_venda.id %}">Editar Venda</a>
+                    <a class="btn btn-outline-primary btn-resumo" href="{% url 'venda_filtro' ultima_venda.id %}">Recebimento</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+{% endblock 'conteudo' %}
+
+

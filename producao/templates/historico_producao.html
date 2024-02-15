@@ -1,0 +1,54 @@
+{% extends "bases/base.html" %}
+{% load static %}
+
+{% block 'head' %} 
+    <link rel="stylesheet" href="{% static  "css/historico_producao.css" %}">
+{% endblock 'head' %}
+
+{% block 'conteudo' %}
+
+<header>
+    
+    <div class="sidebar">
+        <a class="sidebar-linha" href="{% url 'producao' %}">Estoque</a>   
+        <a class="sidebar-linha" href="{% url 'cadastrar_producao' %}">Registrar Produção</a>
+        <span class="sidebar-pagina">Histórico Produção</span>
+    </div>
+
+    <div class="container">
+        {% if messages %}      
+            {% for message in messages %}             
+                <div class="alert {{message.tags}}" style="margin-top: 10px">{{message}}</div>         
+            {% endfor %} 
+        {% endif %}
+
+        <h1>Histórico Produção</h1>
+        {% for producao in producoes %}
+            <div class="card-producao">        
+                <div class="linha-data">   
+                    <div class="coluna"><span style="font-weight: bold">Data: </span>{{producao.data}}</div>
+                    <div class="coluna"><span style="font-weight: bold">Dia da Semana: </span>{{producao.dia_semana}}</div>
+                    <div class="coluna"><span style="font-weight: bold">Total Producão: </span>{{producao.total_kg}} kg</div>            
+                </div>
+                <div class="linha-producao">
+                    <div class="coluna cabecalho">Quantidade</div>
+                    <div class="coluna cabecalho">Produto</div>
+                    <div class="coluna cabecalho">Quantidade em kg</div>
+                    <div class="coluna cabecalho">Funcionario</div>
+                </div>
+
+                {% for produto in producao.produto.all %}
+                    <div class="linha-producao">
+                        <div class="coluna"> {{produto.quantidade}}</div>
+                        <div class="coluna"> {{produto.produto}}</div>
+                        <div class="coluna"> {{produto.quantidade_kg}}</div>
+                        <div class="coluna"> {{produto.funcionario}}</div>
+                    </div>                           
+                {% endfor %}        
+            </div>         
+        {% endfor %}
+    </div>
+
+</header>
+
+{% endblock %}

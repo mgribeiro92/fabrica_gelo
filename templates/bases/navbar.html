@@ -1,0 +1,29 @@
+{% load static %}
+<nav class="navbar navbar-expand" >
+  	<div class="container-fluid">
+    	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+      		<ul class="navbar-nav me-auto mb-2 mb-lg-0">				
+				<li class="nav-item">
+					<a class="nav-link text-light" id="clientes" href="{% url 'clientes' %}">Clientes</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link text-light" id="producao" href="{% url 'producao' %}">Produção</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link text-light" id="vendas" href="{% url 'gerenciar_vendas' %}">Vendas</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link text-light" id="despesa" href="{% url 'historico_despesa' %}">Despesa</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link text-light" id="financeiro" href="{% url 'visao_geral' %}">Financeiro</a>
+				</li>
+      		</ul>
+			<ul class="d-flex navbar-nav">				        
+				<li class="nav-item">
+					<a class="nav-link text-light" href="{% url 'sair' %}">Sair</a>
+				</li>
+			</ul>
+    </div>
+  </div>
+</nav>

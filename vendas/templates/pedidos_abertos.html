@@ -1,0 +1,116 @@
+{% extends "bases/base.html" %}
+{% load static %}
+
+{% block 'head' %} 
+    <link rel="stylesheet" href="{% static  "css/vendas.css" %}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+{% endblock 'head' %}
+
+{% block 'conteudo' %}
+
+
+<div class="container">        
+    {% if messages %}            
+    <br>            
+        {% for message in messages %}            
+            <div class="alert {{ message.tags }}">{{ message }}</div>            
+        {% endfor %}        
+    {% endif %}
+</div>
+
+<header class="header">
+
+    <div class="sidebar">
+        <a class="sidebar-linha" href="{% url 'gerenciar_vendas' %}">Ultimas Vendas</a>       
+        <a class="sidebar-linha" href="{% url 'pedidos' %}">Novo Pedido</a>        
+        <a class="sidebar-pagina" href="{% url 'pedidos_abertos' %}">Pedidos em Aberto</a>                     
+    </div>
+    
+    <div class="container">
+        
+        <div class="linha_filtro">
+
+            <form class="formulario_filtro" action="{% url "pedidos_abertos" %}" method="GET">                          
+                <div class="coluna_input">                                  
+                    <h1>Cliente</h1>
+                    <select class="form-control select2" style="width: 300px" name="cliente">
+                        <option selected disabled>Selecione um cliente</option>
+                        {% for cliente in clientes %}
+                            <option class="opt" value="{{cliente}}">{{cliente.nome}}</option>
+                        {% endfor %}
+                    </select>
+
+                    <script>
+                        // Inicialize o plugin Select2
+                        $(document).ready(function() {
+                        $('.select2').select2();
+                        });
+                    </script>
+                </div>
+                <div class="coluna_filtro">         
+                    <input type="submit" class="btn-filtro" value="Filtrar">                
+                </div>
+                <div class="coluna_filtro">
+                    <input type="hidden" name="limpar">         
+                    <input type="submit" style="background-color: gray" class="btn-filtro" name="limpar" value="Limpar">                
+                </div>
+            </form>
+        </div>
+       
+        <div class="card">
+            {% if vendas %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                            <th style="width: 60px">Pedido </th>
+                            <th style="width: 200px">Cliente</th>
+                            <th style="width: 80px">Valor Total</th>
+                            <th style="width: 80px">Valor Recebido</th>
+                            <th style="width: 80px">Valor Receber</th>
+                            <th>NFe</th>
+                            <th style="width: 50px">Prazo Recebimento</th>
+                            <th style="width: 120px">Status Recebimento</th>
+                            <th style="width: 150px">Realizar Recebimento</th>
+                    </tr>
+                </thead>
+
+            {% else %}
+                <p>Não existe vendas para este filtro</p>
+            {% endif %}
+            
+                {% for venda in vendas %}
+                <tbody>
+                    <tr>
+                        <td>{{venda.data}}</td>
+                        <td>
+                            <a href="{% url 'venda_filtro' venda.id %}">{{venda}}</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'cliente_filtro' venda.cliente.id %}">{{venda.cliente}}</a>
+                        </td>
+                        <td>{{venda.valor_total}}</td>
+                        <td>{{venda.valor_recebido}}</td>
+                        <td>{{venda.valor_receber}}</td>
+                        <td>{% if venda.nfe == True %}<i sytle="text: center" class="fa-solid fa-check"></i>{%else%}<i class="fa-solid fa-x"></i>{%endif%}</td>                    
+                        <td>{{venda.prazo}}</td>
+                        <td>{{venda.badge_template_pagamento}}</td>                    
+                        <td>       
+                            <a href="{% url 'venda_filtro' venda.id  %}">
+                                <button type="button" class="btn-recebimento">Recebimento</button>
+                            </a>                
+                        </td>                  
+                </tbody>
+                {% endfor %} 
+            </table>
+        </div>  
+    </div>
+</div> 
+
+
+{% endblock 'conteudo' %}

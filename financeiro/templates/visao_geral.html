@@ -1,0 +1,126 @@
+{% extends "bases/base.html" %}
+{% load static %}
+
+{% block 'head' %} 
+    <link rel="stylesheet" href="{% static  "css/financeiro.css" %}">
+    
+{% endblock 'head' %}
+
+{% block 'conteudo' %}
+
+<header>
+
+    <div class="sidebar">
+        <a class="sidebar-pagina" href="{% url 'visao_geral' %}">Visão Geral</a>       
+        <a class="sidebar-linha" href="{% url 'historico_caixas' %}">Histórico Caixas</a>
+        <a class="sidebar-linha" href="{% url 'contas_pagar' %}">Contas a Pagar</a>
+        <a class="sidebar-linha" href="{% url 'cheque_boleto' %}">Cheque e Boleto</a>
+    </div>
+   
+
+       
+    <div class="container">
+
+        <div class="container-fluid">
+            {% if messages %} 
+                {% for message in messages %}
+                    <div class= "alert {{ message.tags }}" style="margin-top: 10px" >{{ message }} </div>
+                {% endfor %}        
+            {% endif %}
+        </div>
+
+        <div class="row m-2">
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-title">Caixas</div>
+                    {% for conta in contas %}
+                        <div class="card-text">{{conta}}: {{conta.saldo_cor|safe}}</div>
+                    {% endfor %}       
+                    <div class="mt-2"><span class="card-title">Total: </span> {{saldo_total}}</div>            
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-title">Valor a Receber</div>                    
+                    <div class="card-text">Total: {{total_receber}}</div>
+                    <div class="card-title mt-2">Valor Cheque/Boleto</div>                    
+                    <div class="card-text">Total: {{total_cheque_boleto}}</div>
+                    <div class="card-title mt-2">Valor a Pagar</div>
+                    <div class="card-text">Total: {{total_pagar}}</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-title">Mês: {{mes_atual}}</div> 
+                    <div class="card-title">Vendas</div>                    
+                    <div class="card-text">Vendas Total: {{total_mes}}</div>
+                    <div class="card-title mt-2">Despesas</div>
+                    <div class="card-text">Total: {{total_despesas}}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tabelas">
+            <div class="tabela">
+                <h1>Clientes Devedores</h1>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Valor Receber</th>
+                            <th>Ultimo Pedido</th>                    
+                        </tr>
+                    </thead>
+
+                    {% for cliente in clientes_dic %}
+                    <tbody>
+                        <tr>                    
+                            <td style="border-right: 2px solid #ddd">
+                                <a href="{% url 'cliente_filtro' cliente.cliente.id %}">{{cliente.cliente}}</a>
+                            </td>
+                            <td style="border-right: 2px solid #ddd"> {{ cliente.valor_receber }}</td>
+                            {% if cliente.dias <= 1 %}
+                                <td>{{ cliente.dias }} dia</td>
+                            {% else %}
+                                <td>{{ cliente.dias }} dias</td>
+                            {% endif %}
+                    </tbody>
+                    {% endfor %} 
+                </table>
+            </div>
+
+            <div class="tabela">
+                <h1>Contas a Pagar</h1>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mes</th>
+                            <th>Valor Pagar</th>                    
+                        </tr>
+                    </thead>
+
+                    {% for conta in contas_pagar_mes %}
+                    <tbody>
+                        <tr>                    
+                            <td style="border-right: 2px solid #ddd">{{conta.mes}} de {{ conta.ano }}</td>
+                            <td>{{conta.valor}}</td>                    
+                    </tbody>
+                    {% endfor %} 
+                </table>
+            </div>
+
+
+        </div>
+
+        
+     
+   </div>
+</header>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+{% endblock %}

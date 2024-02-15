@@ -1,0 +1,70 @@
+{% extends "bases/base.html" %}
+
+{% block 'head' %}
+
+    <link rel="stylesheet" href="{% static  "css/vendas.css" %}">   
+{% endblock 'head' %}
+
+{% block 'conteudo' %}
+
+<div class="container">        
+    {% if messages %}            
+    <br>            
+        {% for message in messages %}            
+            <div class="alert {{ message.tags }}">{{ message }}</div>            
+        {% endfor %}        
+    {% endif %}        
+    <div class="resumo_pedido">
+        <div class="cabecalho"> 
+            <h1>Resumo da Venda</h1>              
+            <div class="row">
+                <div class="col">
+                    <span class="font-bold">Data:</span> {{venda.data}}
+                </div>
+                <div class="col">
+                    <span class="font-bold">Pedido:</span> {{ venda }}
+                </div>
+                <div class="col">
+                    <span class="font-bold">Cliente:</span> {{venda.cliente}}
+                </div>
+                <div class="col">
+                    <span class="font-bold">Status:</span> {{venda.badge_template_pagamento}}
+                </div>             
+            </div>
+        </div>
+    
+        <div class="produto_titulo">
+            <div class="linha">
+                <div class="coluna">Produto</div>
+                <div class="coluna">Quantidade</div>
+                <div class="coluna">Valor Unitario</div>
+                <div class="coluna">Valor Produto</div>
+            </div>
+        </div>
+                      
+    </div>
+    {% for pedidos in ultimo_pedido %} 
+                        
+        {% for produto in pedidos.produto.all %}
+        <div class="row mb-2">              
+            <div class="col">
+                {{produto.produto}}
+            </div>
+            <div class="col">
+                {{produto.valor_unitario}}
+            </div>
+            <div class="col">
+                {{produto.quantidade}}
+            </div>
+            <div class="col">
+                {{produto.valor_pedido}}
+            </div>
+            
+        </div> 
+        {% endfor %}                 
+    {% endfor %} 
+    
+    
+</div>
+
+{% endblock 'conteudo' %}

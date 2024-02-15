@@ -1,0 +1,120 @@
+{% extends "bases/base.html" %}
+{% load static %}
+
+{% block 'head' %} 
+    <link rel="stylesheet" href="{% static  "css/despesa.css" %}">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    
+{% endblock 'head' %}
+
+{% block 'conteudo' %}
+
+<div class="container-fluid">
+    {% if messages %} 
+        {% for message in messages %}
+            <div class= "alert {{ message.tags }}" style="margin-top: 10px" >{{ message }} </div>
+        {% endfor %}        
+    {% endif %}
+</div>       
+  
+
+<header class="container">
+
+   
+    <div class="form-despesa">
+        <form action="" method="POST" id="myForm"> {% csrf_token %}               
+            <h1 style="font-size: 25px" class="mb-4">Registrar Despesa</h1>
+            <div class="row mb-2">
+                <div class="col-4">
+                    <label>Data</label>
+                    <input type="date" class="form-control" name="data" value={{data_despesa}}>
+                </div>
+                <div class="col-3">
+                    <label>Valor</label>
+                    <input type="number" class="form-control" step="0.01" name="valor" value={{valor}}>
+                </div>
+                <div class="col">
+                    <label>Caixa</label>
+                    <select name="caixa" class="form-select">                       
+                    {% for caixa in caixas%}
+                        <option {% if caixa == despesa.caixa  %}selected{% endif %}>{{caixa}}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+            </div>
+          
+            <div class="row mb-2">
+                <div class="col">                 
+                    <label for="categoria">Categoria</label>
+                    <select class="form-select" id="categoria" name="categoria">                                               
+                    {% for categoria in categorias %}                       
+                        <option {% if categoria.nome_categoria == despesa.categoria  %}selected{% endif %}>{{categoria.nome_categoria}}</option>
+                    {% endfor %}
+                    </select>
+                     
+                </div>
+                <div class="col">                    
+                    <label for="subcategoria">Subcategoria</label>
+                    <select class="form-select" id="subcategoria" name="subcategoria">
+                        <option>{{despesa.subcategoria}}</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label>Tipo</label>
+                    <select class="form-control" name="tipo_pagamento">
+                    {% for tipo in tipo_pagamento %}                       
+                        <option {% if tipo == despesa.tipo_pagamento  %}selected{% endif %}>{{tipo}}</option>
+                    {% endfor %}                        
+                    </select>
+                </div>
+                <div class="row mb-2">                
+                    <div class="col">
+                        <label>Observação</label>
+                        <textarea class="form-control" name="observacao" rows="3">{{despesa.obs}}</textarea>
+                    </div>
+                </div>
+            </div>
+        
+            <button type="submit" class="btn-despesa">Editar</button>
+        </form>
+       
+    </div>
+            
+</header>
+
+<script>
+    document.getElementById('categoria').addEventListener('change', function() {
+      var categoriaId = this.value;
+      var subcategoriaSelect = document.getElementById('subcategoria');
+    
+      // Limpar as opções atuais
+      subcategoriaSelect.innerHTML = '';
+    
+      // Obter as subcategorias associadas à categoria selecionada
+      var subcategorias = categoriasSubcategorias[categoriaId];
+    
+      // Adicionar as opções de subcategorias ao select
+      subcategorias.forEach(function(subcategoria) {
+        var option = document.createElement('option');
+        option.value = subcategoria.id;
+        option.text = subcategoria.nome;
+        subcategoriaSelect.add(option);
+      });
+    });
+    
+    // Variável JavaScript que contém um mapeamento de categoria para subcategorias
+    var categoriasSubcategorias = {
+      {% for categoria in categorias %}
+        "{{ categoria }}": [
+          {% for subcategoria in categoria.subcategoria_set.all %}
+            { "id": "{{ subcategoria }}", "nome": "{{ subcategoria.nome_subcategoria }}" },
+          {% endfor %}
+        ],
+      {% endfor %}
+    };
+    </script>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+{% endblock 'conteudo' %}

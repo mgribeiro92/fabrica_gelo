@@ -1,0 +1,62 @@
+{% extends "bases/base.html" %}
+{% load static %}
+
+{% block 'head' %} 
+    <link rel="stylesheet" href="{% static  "css/base.css" %}">
+{% endblock 'head' %}
+
+{% block 'conteudo' %}
+
+<div class="container">        
+    {% if messages %}            
+    <br>            
+        {% for message in messages %}            
+            <div class="alert {{ message.tags }}">{{ message }}</div>            
+        {% endfor %}        
+    {% endif %}        
+    <div class="row">            
+        <div class="col-md">                
+            <form action="{% url "gerenciar_vendas" %}" method="GET">                
+                <label for="">Data</label>                
+                <input type="date" class="form-control" name="data" value="Data">            
+            </div>            
+                        
+            <div class="col-md">                
+                <br>                
+                <input type="submit" class="btn-default" value="Filtrar">                
+            </form>            
+        </div>        
+    </div>        
+    <br> 
+          
+    
+    {% for venda in vendas %}
+    <div class="card" style="width: 700px">
+        <div class="row">                    
+            <div class="col">                        
+                {{venda.data}}
+            </div>
+            <div class="col">                        
+                <a href="{% url 'venda_filtro' venda.id %}">{{venda}}</a>
+            </div>
+            <div class="col">                        
+                <a href="{% url 'cliente_filtro' venda.cliente.id %}">{{venda.cliente}}</a>
+            </div>
+            <div class="col">                        
+                R$ {{venda.valor_total}}
+            </div>
+            <div class="col">                        
+                {{venda.badge_template_pagamento}}
+            </div>
+                      
+                                    
+        </div>
+    </div>
+
+    
+    {% endfor %}                             
+ 
+</div> 
+
+
+{% endblock 'conteudo' %}

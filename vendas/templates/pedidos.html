@@ -1,0 +1,100 @@
+{% extends "bases/base.html" %}
+{% load static %}
+
+{% block 'head' %}
+   
+    <!-- Select2 CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+    
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!-- Select2 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+    <link rel="stylesheet" href="{% static  "css/pedidos.css" %}">
+{% endblock 'head' %}
+
+{% block 'conteudo' %}
+
+
+{% if messages %} 
+    {% for message in messages %}
+        <div class= "alert {{ message.tags }}" >{{ message }} </div>
+    {% endfor %}        
+{% endif %}
+
+<header>
+    
+    <div class="sidebar"> 
+        <a class="sidebar-linha" href="{% url 'gerenciar_vendas' %}">Ultimas Vendas</a>     
+        <a class="sidebar-pagina" href="{% url 'pedidos' %}">Novo Pedido</a>        
+        <a class="sidebar-linha" href="{% url 'pedidos_abertos' %}">Pedidos em Aberto</a>                     
+    </div>
+
+    <div class="centralizar-form">
+        <form class="form-pedido" action="{% url 'pedidos' %}" method="POST"> {% csrf_token %}
+            <h1>Registrar Venda</h1>
+            <div class="row">
+                <div class="col-4">
+                    <label>Data</label>
+                    <input type="date" class="form-control" name="data" value={{data_atual}}>
+                </div>
+                <div class="col-8">
+                    <label>Cliente</label>
+                    <select class="form-control select2" name="cliente">
+                        <option selected disabled>Selecione um cliente</option>
+                        {% for cliente in clientes %}
+                            <option class="opt" value="{{cliente}}">{{cliente.nome}}</option>
+                        {% endfor %}
+                    </select>        
+                </div>
+            </div>
+            <script>
+                // Inicialize o plugin Select2
+                $(document).ready(function() {
+                  $('.select2').select2();
+                });
+            </script>
+
+            <div class="form-group row">
+                <div class="form-group col-md-6 mt-4" id="produtos">
+                    <label>Produtos</label>                 
+                    <select class="select form-control bg-select mb-4" multiple name="produtos">                                                                        
+                        {% for produto in produtos %}
+                            <option class="opt" value="{{produto.id}}">{{produto.nome}}</option>
+                        {% endfor %}                                                                   
+                    </select>
+                </div>
+                <div class="form-group col-md-3 mt-4" id="valor_unitario_produto">
+                    <label>Valor Uni</label>                                                                                        
+                    {% for produto in produtos %}
+                        <input class="form-control form-control-sm" value="{{produto.valor_unitario}}" name="valor_unitario">
+                    {% endfor %}                                                                  
+                </div>
+                <div class="form-group col-md-3 mt-4" id="quantidade_produto">                        
+                    <label>Qtde</label>
+                    <input class="form-control form-control-sm" type="number" name="quantidade_produto">
+                    <input class="form-control form-control-sm" type="number" name="quantidade_produto">
+                    <input class="form-control form-control-sm" type="number" name="quantidade_produto">
+                    <input class="form-control form-control-sm" type="number" name="quantidade_produto">
+                </div>
+            </div>
+            
+            <div class="row ml-1">
+                <div class="col form-check d-flex mb-4">
+                    <input class="form-check-input me-2" type="checkbox" name="nfe_vista">
+                    <label class="form-check-label">Nota Fiscal à Vista</label>
+                </div>            
+                <div class="col form-check d-flex mb-4">
+                    <input class="form-check-input me-2" type="checkbox" name="nfe_prazo">
+                    <label class="form-check-label">Nota Fiscal Boleto</label>
+                </div>
+            </div>
+            <input type="submit" class="btn-pedido" value="Registrar Venda">                
+        </form>            
+    </div>
+  
+</header>
+    
+{% endblock 'conteudo' %}

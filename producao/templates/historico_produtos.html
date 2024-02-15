@@ -1,0 +1,90 @@
+{% extends "bases/base.html" %}
+{% load static %}
+
+{% block 'head' %} 
+    <link rel="stylesheet" href="{% static  "css/historico_producao.css" %}">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+{% endblock 'head' %}
+
+{% block 'conteudo' %}
+
+
+{% if messages %}      
+  {% for message in messages %}             
+    <div class="alert {{message.tags}}">                 
+      {{message}}             
+    </div>         
+  {% endfor %} 
+{% endif %}
+
+<header>
+    
+    <div class="sidebar">
+        <a href="{% url 'cadastrar_producao' %}">
+            <button type="button" class="btn btn-outline-primary">
+                Registrar Producão
+            </button> 
+        </a>
+    </div>
+
+    <div class="container">
+
+		<div class="linha_filtro">
+			<form class="formulario_filtro" action="{% url "clientes" %}" method="GET">             
+				<div class="coluna_input">                
+					<label>Selecione o produto</label>                
+					<select class="select form-control bg-select mb-4" name="produto">                                                                        
+                        {% for produto in produtos %}
+                            <option class="opt" value="{{produto.id}}">{{produto.nome}}</option>
+                        {% endfor %}                                                                   
+                    </select>                        
+				</div>           
+		
+				<div class="coluna_filtro">         
+					<input type="submit" class="btn_filtro" value="Filtrar">                
+				</div>
+				<div class="coluna_filtro">
+					<input type="hidden" name="limpar">         
+					<input type="submit" style="background-color: #ffc40c" class="btn_filtro" name="limpar" value="Limpar">                
+				</div>
+			</form>
+		</div>
+
+		<table>            
+        	<thead>                                
+            	<tr>                  
+					<th>Data</th> 
+					<th>Cliente/Funcionario</th>                                 
+					<th>Produto</th>
+					<th>Quantidade</th>
+					<th></th>					                             
+            	</tr>  
+        	</thead>
+
+        	<tbody>            
+            {% for transacao in transacoes %}
+				{% for produto in transacao.produto.all %}
+				<tr class="linha-tabela">
+					<td>{{ transacao.data }}</td>
+					<td>{{ transacao.cliente }} {{produto.funcionario}} </td>					                                                                        
+					<td>{{ produto }}</td>
+					<td>{{ produto.quantidade }}</td>
+					<td>{% if transacao.cliente %}
+							<span class="material-symbols-outlined" style="color: red">arrow_downward_alt</span>
+						{% else %}
+							<span class="material-symbols-outlined" style="color: green">arrow_upward_alt</span>
+						{% endif %}
+					</td>					               
+				</tr>
+				{% endfor %}
+            {% endfor %}                
+        	</tbody>            
+    </table>
+
+  </div>
+  
+</header>
+
+{% endblock %}

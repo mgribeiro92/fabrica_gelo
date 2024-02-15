@@ -1,0 +1,53 @@
+{% extends "bases/base.html" %}
+{% load static %}
+
+
+{% block 'head' %}
+
+    <link rel="stylesheet" href="{% static  "css/home.css" %}">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,400;0,600;1,200;1,400;1,600&display=swap" rel="stylesheet">
+    
+
+
+{% endblock 'head' %}
+
+{% block 'conteudo' %}
+
+    <div class="container mt-3">
+        <p>Faraó Gelo LTDA - Sistema de Gestão</p>
+        <hr>
+    </div>
+
+    
+    <div class="row">
+        <div class="card venda">
+            <a style="text-decoration: none; color: inherit" href="{% url 'pedidos' %}"><legend>Vendas</legend></a>            
+            <p>Clique para registrar uma venda</p>
+            <img class="image" src={% static "img/vendas.png" %} alt="settings" />
+        </div>
+        <div class="card producao">
+            <a style="text-decoration: none; color: inherit" href="{% url 'cadastrar_producao' %}"><legend>Produção</legend></a>
+            <p>Clique para inserir uma produção</p>
+            <img class="image" src={% static "img/producao.png" %} alt="settings" />
+        </div>
+        <div class="card despesa">
+            <a style="text-decoration: none; color: inherit" href="{% url 'registro_despesa' %}"><legend>Despesa</legend></a>
+            <p>Clique para registrar despesa</p>
+            <img class="image" src={% static "img/despesa.png" %} alt="settings" />
+        </div>
+    </div>
+    <div class="row">        
+        
+        <div class="card cliente">
+            <a style="text-decoration: none; color: inherit" href="{% url 'clientes' %}"><legend>Clientes</legend></a>
+            <p>Todos os Clientes</p>
+            <img class="image" src={% static "img/cliente-satisfeito.png" %} alt="settings" />
+        </div>
+        <div class="card financeiro">
+            <a style="text-decoration: none; color: inherit" href="{% url 'visao_geral' %}"><legend>Financeiro</legend></a>
+            <p>Visão Geral Financeiro</p>
+            <img class="image" src={% static "img/financa.png" %} alt="settings" />
+        </div>
+    </div>
+{% endblock 'conteudo' %}

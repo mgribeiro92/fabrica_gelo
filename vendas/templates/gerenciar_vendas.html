@@ -1,0 +1,125 @@
+{% extends "bases/base.html" %}
+{% load static %}
+
+{% block 'head' %} 
+    <link rel="stylesheet" href="{% static  "css/vendas.css" %}">
+
+    
+{% endblock 'head' %}
+
+{% block 'conteudo' %}
+
+<header class="header">
+
+    <div class="sidebar">
+        <a class="sidebar-pagina" href="{% url 'gerenciar_vendas' %}">Ultimas Vendas</a>      
+        <a class="sidebar-linha" href="{% url 'pedidos' %}">Novo Pedido</a>        
+        <a class="sidebar-linha" href="{% url 'pedidos_abertos' %}">Pedidos em Aberto</a>                     
+    </div>
+    
+    <div class="container">
+        {% if messages %}            
+            <br>            
+                {% for message in messages %}            
+                    <div class="alert {{ message.tags }}">{{ message }}</div>            
+                {% endfor %}        
+            {% endif %}
+        <div class="linha_filtro">
+            <form class="formulario_filtro" action="{% url "gerenciar_vendas" %}" method="GET">             
+                <div class="coluna_input">                
+                    <label>Data</label>                
+                    <input type="date" class="form-control" name="data">                        
+                </div>               
+                            
+                <div class="coluna_input">                
+                    <label>Status Pagamento</label>                
+                    <select type="text" class="form-control" name="status">
+                        <option>Todos os pedidos</option>
+                        <option>Em aberto</option>
+                        <option>Recebido</option>
+                        <option>Recebido Parcialmente</option>
+                        <option>Cancelado</option>
+                    </select>
+                </div>
+                <div class="coluna_filtro">         
+                    <input type="submit" class="btn-filtro" value="Filtrar">                
+                </div>
+                <div class="coluna_filtro">
+                    <input type="hidden" name="limpar">         
+                    <input type="submit" style="background-color: gray" class="btn-filtro" name="limpar" value="Limpar">                
+                </div>
+            </form>
+        </div>
+        
+        <div class="card">
+            <div class="row">                          
+                <div class="col">
+                    <h1>Intervalo entre as vendas</h1>
+                    {% if data_pesquisa %}
+                        <p>{{ data_pesquisa }}</p>
+                    {% else %}
+                        <p>{{ data_15 }} - {{ data_hoje }}</p>
+                    {% endif %}
+                </div>                
+                <div class="col">
+                    <h1>Valor total</h1>
+                    <p>R$ {{valor_total}}</p>               
+                </div>
+                <div class="col">
+                    <h1>Valor recebido</h1>
+                    <p>R$ {{valor_recebido}}</p>               
+                </div> 
+                <div class="col">
+                    <h1>Valor receber</h1>
+                    <p>R$ {{valor_receber}}</p>               
+                </div>                
+            </div>
+        </div>
+        
+        {% if vendas %}
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 210px">Data</th>
+                        <th style="width: 60px">Pedido </th>
+                        <th style="width: 200px">Cliente</th>
+                        <th style="width: 80px">Valor Total</th>
+                        <th style="width: 80px">Valor Recebido</th>
+                        <th style="width: 80px">Valor Receber</th>                        
+                        <th style="width: 50px">Prazo Recebimento</th>
+                        <th style="width: 120px">Status Recebimento</th>
+                        <th style="width: 150px">Realizar Recebimento</th>
+                    </tr>
+                </thead>
+
+            {% else %}
+                <p>Não existe vendas para este filtro</p>
+            {% endif %}
+            
+                {% for venda in vendas %}
+                <tbody>
+                    <tr>
+                        <td>{{venda.data}}</td>
+                        <td>
+                            <a href="{% url 'venda_filtro' venda.id %}">{{venda}}</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'cliente_filtro' venda.cliente.id %}">{{venda.cliente}}</a>
+                        </td>
+                        <td>{{venda.valor_total}}</td>
+                        <td>{{venda.valor_recebido}}</td>
+                        <td>{{venda.valor_receber}}</td>                                            
+                        <td>{{venda.prazo}}</td>
+                        <td>{{venda.badge_template_pagamento}}</td>                    
+                        <td><a class="btn-recebimento" href="{% url 'venda_filtro' venda.id  %}">Recebimento</a></td>                  
+                </tbody>
+                {% endfor %} 
+            </table>
+        </div>
+    </div>  
+ 
+</div> 
+
+
+{% endblock 'conteudo' %}

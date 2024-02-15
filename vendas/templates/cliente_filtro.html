@@ -1,0 +1,65 @@
+{% extends "bases/base.html" %}
+{% load static %}
+
+{% block 'head' %} 
+    <link rel="stylesheet" href="{% static  "css/clientes.css" %}">
+{% endblock 'head' %}
+
+{% block 'conteudo' %}
+
+
+<header class="header">
+
+    <div class="sidebar">
+		<a class="sidebar-pagina" href="/vendas/cliente_filtro/{{cliente.id}}">Todos os Pedidos</a>	                      
+        <a class="sidebar-linha" href="/vendas/cliente_filtro/{{cliente.id}}?pedidos_abertos=Pedidos+Abertos">Pedidos Abertos</a>
+		<a class="sidebar-linha" href="{% url 'clientes' %}">Todos os Clientes</a>        
+    </div>
+  
+    <div class="container">
+
+        <div class="card" style="width: 400px">           
+			<div class="card-title">{{ cliente }}</div>
+			<div class="card-text"><span class="font-bold">Status:</span> {{cliente.status_cliente}} </div>
+			<div class="card-text"><span class="font-bold">Freezer:</span> {{cliente.freezer}} </div>
+			<div class="card-text"><span class="font-bold">Cidade:</span> {{cliente.cidade}} </div>
+			<div class="card-text"><span class="font-bold">Telefone:</span> {{cliente.telefone}} </div>
+			<div class="card-text"><span class="font-bold">Valor à Receber:</span> {{cliente.valor_receber}} </div>
+        </div>
+
+		
+		<div class="card">
+		{% if vendas_cliente %}
+			<table>                
+				<tr>                  
+					<th>Data</th> 
+					<th>Numero Pedido</th>                                 
+					<th>Valor Total</th> 
+					<th>Valor Recebido</th>
+					<th>Valor a Receber</th>
+					<th>Status Pagamento</th>                
+				</tr>                
+			{% else %}
+				<p>Nao existe vendas em aberto para este cliente</p>
+		{% endif %}
+
+				{% for venda in vendas_cliente %}
+				<tr>                     					
+					<td>{{venda.data}}</td>
+					<td><a href="{% url 'venda_filtro' venda.id %}">{{venda}}</a></td>                                                                        
+					<td>{{venda.valor_total}}</td>             
+					<td>{{venda.valor_recebido}}</td>            
+					<td>{{venda.valor_receber}}</td>
+					<td>{{venda.badge_template_pagamento}}</td>                                         
+				</tr>
+            {% endfor %}                                     
+       	</table>
+	</div>
+</div>    
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+{% endblock 'conteudo' %}
